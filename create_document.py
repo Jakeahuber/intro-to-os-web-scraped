@@ -6,7 +6,7 @@ from fpdf import FPDF
 
 def main():
     url = 'https://en.wikipedia.org/wiki/Operating_system'
-    document_name = 'intro_to_operating_systems.txt'
+    document_name = 'intro_to_operating_systems_2.txt'
     unfiltered_html_content = get_html_content(url)
     filtered_html_content = get_filtered_html_content(unfiltered_html_content, 'contentSub', 'Notes')
     links = get_links(filtered_html_content)
@@ -67,7 +67,7 @@ def create_pdf(document_name):
 
     # create title
     pdf.set_font('Arial', 'B', size = 15)
-    pdf.cell(200, 10, txt="Intro to Operating Systems: Electric Boogaloo", ln = 1, align = 'C')
+    pdf.cell(200, 10, txt="Intro to Operating Systems 2: Electric Boogaloo", ln = 1, align = 'C')
 
     # open the text file in read mode
     document = open(document_name, "r", encoding="utf-8")
