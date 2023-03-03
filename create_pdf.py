@@ -44,8 +44,6 @@ class CreatePdf:
     def __get_terms_defs_images(self, document):
         terms_defs_images = []  # (term, (def, image))
         for paragraph in document:
-            # need to change encoding so FPDF can read the contents
-            paragraph = paragraph.encode('latin-1', 'replace').decode('latin-1')
             # don't include empty lines
             if (len(paragraph.split(":", 1)) == 1):
                 continue
