@@ -17,6 +17,10 @@ Refer to **example.py**
 
 * **html_templates.py** contains html text in the form of strings that we write to a temporary html file within CreatePdf. 
 
+## Example Page
+
+![example-page](https://user-images.githubusercontent.com/68114979/222795978-6e03d425-8411-4f37-aeed-97cb774c8745.png)
+
 ## Author
 
 - [@Jake Huber](https://www.github.com/jakeahuber)
