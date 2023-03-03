@@ -6,12 +6,12 @@ from html_templates import get_start_html, get_end_html, get_term_def_image_div
 class CreatePdf:
     html_file_name = "temp.html"
     document_name = ""
-    pdf_name = ""
+    pdf_save_path = ""
     path_to_wkhtmltopdf = ""
 
-    def __init__(self, document_name, pdf_name, path_to_wkhtmltopdf):
-        self.document_name = document_name
-        self.pdf_name = pdf_name
+    def __init__(self, document_save_path, pdf_save_path, path_to_wkhtmltopdf):
+        self.document_name = document_save_path
+        self.pdf_save_path = pdf_save_path
         self.path_to_wkhtmltopdf = path_to_wkhtmltopdf
         self.__create_pdf()
 
@@ -39,7 +39,7 @@ class CreatePdf:
 
     def __save_pdf(self):
         config = pdfkit.configuration(wkhtmltopdf=self.path_to_wkhtmltopdf)
-        pdfkit.from_file(self.html_file_name, output_path=self.pdf_name, configuration=config)
+        pdfkit.from_file(self.html_file_name, output_path=self.pdf_save_path, configuration=config)
 
     def __get_terms_defs_images(self, document):
         terms_defs_images = []  # (term, (def, image))

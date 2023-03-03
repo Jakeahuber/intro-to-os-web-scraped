@@ -1,23 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 import wikipedia
-from fpdf import FPDF
 
 class CreateDocument:
-    url = 'https://en.wikipedia.org/wiki/Operating_system'
-    document_name = ""
+    wikipedia_url = 'https://en.wikipedia.org/wiki/Operating_system'
+    document_save_path = ""
 
-    def __init__(self, document_name):
-        self.document_name = document_name
+    def __init__(self, document_save_path):
+        self.document_save_path = document_save_path
         self.__create_document()
 
     def __create_document(self):
-        unfiltered_html_content = self.__get_html_content(self.url)
+        unfiltered_html_content = self.__get_html_content(self.wikipedia_url)
         filtered_html_content = self.__get_filtered_html_content(unfiltered_html_content, 'contentSub', 'Notes')
         links = self.__get_links(filtered_html_content)
         links = list(set(links)) # remove duplicate links
         for link in links:
-            self.__write_first_paragraph_to_document(link, self.document_name)
+            self.__write_first_paragraph_to_document(link, self.document_save_path)
 
     # returns a list of all the links from the html content provided
     def __get_links(self, html_content):
