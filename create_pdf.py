@@ -60,5 +60,5 @@ class CreatePdf:
         urls = bing_image_urls(query, limit=1)
         if (len(urls) > 0):
             return urls[0]
-        # couldn't find an image. Display this image.
+        # couldn't find an image. Display a default image (says 'not found').
         return "https://filestore.community.support.microsoft.com/api/images/ext?url=https%3A%2F%2Fanswerscdn.microsoft.com%2Fstatic%2Fimages%2Fimage-not-found.jpg"
