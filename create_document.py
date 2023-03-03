@@ -14,7 +14,6 @@ class CreateDocument:
         unfiltered_html_content = self.__get_html_content(self.wikipedia_url)
         filtered_html_content = self.__get_filtered_html_content(unfiltered_html_content, 'contentSub', 'Notes')
         links = self.__get_links(filtered_html_content)
-        links = list(set(links)) # remove duplicate links
         for link in links:
             self.__write_first_paragraph_to_document(link, self.document_save_path)
 
@@ -52,7 +51,7 @@ class CreateDocument:
     # prints the first non-empty paragraph that appears in the html content provided
     def __write_first_paragraph_to_document(self, link, document_name):
         url_splits = link.get('href').split("/")
-        wikipedia_page_name = url_splits[len(url_splits) - 1]
+        wikipedia_page_name = url_splits[-1]
         try:
             wikipedia_page_summary = wikipedia.summary(wikipedia_page_name)
         except Exception:
