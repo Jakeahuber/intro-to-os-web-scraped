@@ -5,14 +5,14 @@ from html_templates import get_start_html, get_end_html, get_term_def_image_div
 
 class CreatePdf:
     html_file_name = "temp.html"
+    document_name = ""
     pdf_name = ""
     path_to_wkhtmltopdf = ""
-    document_name = ""
 
-    def __init__(self, pdf_name, path_to_wkhtmltopdf, document_name):
+    def __init__(self, document_name, pdf_name, path_to_wkhtmltopdf):
+        self.document_name = document_name
         self.pdf_name = pdf_name
         self.path_to_wkhtmltopdf = path_to_wkhtmltopdf
-        self.document_name = document_name
         self.__create_pdf()
 
     def __create_pdf(self):
