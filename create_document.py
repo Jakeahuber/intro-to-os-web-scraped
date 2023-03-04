@@ -52,6 +52,9 @@ class CreateDocument:
     def __write_first_paragraph_to_document(self, link, document_name):
         url_splits = link.get('href').split("/")
         wikipedia_page_name = url_splits[-1]
+        # Don't include wikipedia related pages, such as 'Wikipedia: Citation Needed'
+        if wikipedia_page_name.includes("Wikipedia"):
+            return
         try:
             wikipedia_page_summary = wikipedia.summary(wikipedia_page_name)
         except Exception:

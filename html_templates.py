@@ -9,31 +9,39 @@ def get_start_html():
     <body style="font-family:'Arial'">
         <h1 style="font-size: 45px; text-align: center; color: #000d33;"><b>Intro to OS: Web Scraped</b></h1>
         <h5 style="font-size: 25px; text-align: center; color: #000d33;">Author: Jake Huber (jah383@case.edu)</h5>
-        <div>
+        <h3>Table Of Contents:</h3>
+    """
+
+    # removed div from bottom
+
+def add_to_table_of_contents(term):
+    return f"""
+        <a href="#{term}" style="text-decoration: none;">{term}</a><br>
     """
 
 def get_term_def_image_div(term, definition, image_link):
     return f"""
-            <div style="overflow:auto;">
-                <div style="padding: 20px;">
+        <div style="overflow:auto;">
+            <div style="padding: 20px;">
 
-                    <div style="width: 50%;float: left;padding: 20px;">
-                        <h1 style="color: #000d33;">{term}</h1>
-                        <h5>{definition}</h5>
-                    </div>
-                    
-                    <div style="width: 50%;float: left;padding: 20px;">
-                        <div>
-                            <img src="{image_link}" alt="{definition}" style="width: 100%"/>
-                        </div>
+                <div style="width: 50%;float: left;padding: 20px;">
+                    <h1 style="color: #000d33;" id="{term}">{term}</h1>
+                    <h5>{definition}</h5>
+                </div>
+                
+                <div style="width: 50%;float: left;padding: 20px;">
+                    <div>
+                        <img src="{image_link}" alt="{definition}" style="width: 100%"/>
                     </div>
                 </div>
             </div>
+        </div>
         """
 
 def get_end_html():
     return f"""
-        </div>
     </body>
 </html>
 """
+
+# removed div from top
