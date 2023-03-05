@@ -117,18 +117,13 @@ class CreatePdf:
     # Bing was chosen for this task because of its library's simplicity
     def __get_first_image_link(self, query):
         urls = bing_image_urls(query, limit=10)
-
         for url in urls:
             try:
                 response = requests.get(url)
                 response.status_code
-                # can't access url, so continue
-                if response.status_code not in range(200, 300):
-                    print(f"couldnt access {query}")
-                    continue
-                return url
+                if response.status_code in range(200, 300): # can access url, return it
+                    return url
             except:
-                print(f"didn't find {query}")
                 pass
 
         # couldn't find an image. Display a default image (says 'not found').

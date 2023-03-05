@@ -23,6 +23,14 @@ Refer to **example.py**
 
 ![example-page](https://user-images.githubusercontent.com/68114979/222795978-6e03d425-8411-4f37-aeed-97cb774c8745.png)
 
+## Table of Contents 
+
+![table-of-contents](https://user-images.githubusercontent.com/68114979/222943846-2099e100-97f9-49ce-9aff-a161c07a0793.png)
+
+## Front Page
+
+![front-page](https://user-images.githubusercontent.com/68114979/222943840-c7dbf7b2-6523-47e9-9432-66cb532d110f.png)
+
 ## Author
 
 - [@Jake Huber](https://www.github.com/jakeahuber)
