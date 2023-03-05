@@ -1,7 +1,8 @@
 import os
 import pdfkit
+import requests
 from bing_image_urls import bing_image_urls
-from html_templates import get_start_html, get_end_html, get_term_def_image_div, add_to_table_of_contents
+from html_templates import HtmlTemplate
 from term_def_image import TermDefImage
 
 class CreatePdf:
@@ -18,7 +19,7 @@ class CreatePdf:
 
     def __create_pdf(self):
         html_file = open(self.html_save_path, 'a')
-        html_file.write(get_start_html())
+        html_file.write(HtmlTemplate.start_html)
 
         document = open(self.document_save_path, "r", encoding="utf-8")
         terms_defs_images = self.__get_terms_defs_images(document)
@@ -26,20 +27,50 @@ class CreatePdf:
         self.__write_html_table_of_contents(terms_defs_images, html_file)
         self.__write_html_terms_defs_images(terms_defs_images, html_file)
 
-        html_file.write(get_end_html())
+        html_file.write(HtmlTemplate.end_html)
         html_file.close()
+
         self.__save_pdf()
         #os.remove(self.html_save_path) # delete the html file after we make the pdf
 
     # writes the table of contents to the html file
     def __write_html_table_of_contents(self, terms_defs_images, html_file):
         prev_term = ""
+        max_defs_in_column = 60
+        max_defs_on_page = max_defs_in_column * 2
+        defs_on_page = 0
+
+        html_file.write(HtmlTemplate.start_page_div)
+        html_file.write(HtmlTemplate.start_column_div)
+        html_file.write(HtmlTemplate.table_of_contents_title)
         for term_def_image in terms_defs_images:
             term = term_def_image.term
             if prev_term == term: # don't include duplicate definitions
                 continue
-            html_file.write(add_to_table_of_contents(term))
+            
+            html_file.write(HtmlTemplate.table_of_contents_link(term))
+            defs_on_page += 1
+
+            # start new column
+            if defs_on_page == max_defs_in_column:
+                html_file.write(HtmlTemplate.close_column_div)
+                html_file.write(HtmlTemplate.start_column_div)
+
+            # start new page and close the current column
+            if defs_on_page == max_defs_on_page:
+                html_file.write(HtmlTemplate.close_column_div)
+                html_file.write(HtmlTemplate.close_page_div)
+                html_file.write(HtmlTemplate.start_page_div)
+                html_file.write(HtmlTemplate.start_column_div)
+                defs_on_page = 0
+
             prev_term = term
+        
+        # close the column if we didn't already do so on the last iteration
+        if defs_on_page != 0 and defs_on_page != max_defs_in_column:
+            html_file.write(HtmlTemplate.close_column_div)
+
+        html_file.write(HtmlTemplate.close_page_div) # end table of contents
 
     # writes each term with its corresponding definition and image to the html file
     def __write_html_terms_defs_images(self, terms_defs_images, html_file):
@@ -50,7 +81,7 @@ class CreatePdf:
             image_link = term_def_image.image_link
             if prev_term == term: # don't include duplicate definitions
                 continue
-            html_file.write(get_term_def_image_div(term, definition, image_link))
+            html_file.write(HtmlTemplate.term_def_image_div(term, definition, image_link))
             prev_term = term
 
     # saves a pdf containing the contents of the html_save_path file
@@ -85,8 +116,20 @@ class CreatePdf:
     # Given a query, returns the first image Bing finds for the image.
     # Bing was chosen for this task because of its library's simplicity
     def __get_first_image_link(self, query):
-        urls = bing_image_urls(query, limit=1)
-        if (len(urls) > 0):
-            return urls[0]
+        urls = bing_image_urls(query, limit=10)
+
+        for url in urls:
+            try:
+                response = requests.get(url)
+                response.status_code
+                # can't access url, so continue
+                if response.status_code not in range(200, 300):
+                    print(f"couldnt access {query}")
+                    continue
+                return url
+            except:
+                print(f"didn't find {query}")
+                pass
+
         # couldn't find an image. Display a default image (says 'not found').
         return "https://filestore.community.support.microsoft.com/api/images/ext?url=https%3A%2F%2Fanswerscdn.microsoft.com%2Fstatic%2Fimages%2Fimage-not-found.jpg"
