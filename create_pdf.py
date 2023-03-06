@@ -33,7 +33,7 @@ class CreatePdf:
         html_file.close()
 
         self.__save_pdf()
-        #os.remove(self.html_save_path) # delete the html file after we make the pdf
+        os.remove(self.html_save_path) # delete the html file after we make the pdf
 
     # writes the table of contents to the html file
     def __write_html_table_of_contents(self, terms_defs_images, html_file):
@@ -124,9 +124,7 @@ class CreatePdf:
                 response = requests.get(url, timeout=10)
                 if self.__is_valid_image(url, response):
                     return url
-                print(f"couldn't access {query} at: {url}")
             except:
-                print(f"cound find {query}")
                 pass
 
         # couldn't find an image. Display a default image (says 'not found').
@@ -149,6 +147,5 @@ class CreatePdf:
         img = Image.open("temp_image.png")
         width, height = img.size
         ratio = max(width, height) / min(width, height)
-        print(f"ratio: {ratio}")
         # one side of the picture is 2x larger than the other. Looks bad, so isn't valid aspect ratio
         return not ratio > 2

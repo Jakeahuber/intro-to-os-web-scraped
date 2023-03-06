@@ -21,7 +21,7 @@ Refer to **example.py**
 
 ## Example Page
 
-![example-page](https://user-images.githubusercontent.com/68114979/222795978-6e03d425-8411-4f37-aeed-97cb774c8745.png)
+![example-page](https://user-images.githubusercontent.com/68114979/223008880-9f6cb8b8-a675-4e7a-bb50-1c5f3de1395f.png)
 
 ## Table of Contents 
 

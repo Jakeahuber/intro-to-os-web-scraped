@@ -75,5 +75,4 @@ class CreateDocument:
         paragraph_with_limit = paragraph[:self.character_limit]
 
         last_period = paragraph_with_limit.rfind('.')
-        print(paragraph_with_limit[: last_period + 1])
         return paragraph_with_limit[: last_period + 1]
