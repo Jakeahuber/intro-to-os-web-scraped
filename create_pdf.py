@@ -112,6 +112,7 @@ class CreatePdf:
 
             term_def_image = TermDefImage(term, definition, first_image_link)
             terms_defs_images.append(term_def_image)
+            print(f"finished {term}")
         
         return self.__sorted_copy(terms_defs_images)
     
