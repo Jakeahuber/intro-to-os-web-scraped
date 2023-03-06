@@ -99,11 +99,15 @@ class CreatePdf:
             if (len(paragraph.split(":", 1)) == 1):
                 continue
             paragraph = paragraph.encode('latin-1', 'replace').decode('latin-1') # some characters without this line cannot be encoded
-            
             # Each term and definition is of the following format in the txt file:
             # 'Single-board_computer : A single-board computer (SBC) is a ...'
             term = paragraph.split(" : ", 1)[0].replace("_", " ")
             definition = paragraph.split(" : ", 1)[1] 
+
+            # definition either does not exist, or is too short to justify including
+            if len(definition) < 10:
+                continue
+
             first_image_link = self.__get_first_image_link(term)
 
             term_def_image = TermDefImage(term, definition, first_image_link)

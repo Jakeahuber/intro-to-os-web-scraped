@@ -28,13 +28,16 @@ class CreateDocument:
 
     # returns the html contents for the given url
     def __get_html_content(self, url):
+        response = self.__get_http_request(url)
+        html_content = response.content
+        return html_content
+    
+    def __get_http_request(self, url):
         try:
             response = requests.get(url, timeout=10)
         except requests.exceptions.RequestException as e: 
             raise SystemExit(e)
-
-        html_content = response.content
-        return html_content
+        return response
 
     # returns a subsection of unfiltered_html_content containing information through start_id to (not including) end_id.
     # start_id and end_id are names of html ids within unfiltered_html_content.
@@ -53,11 +56,12 @@ class CreateDocument:
     def __write_first_paragraph_to_document(self, link, document_name):
         url_splits = link.get('href').split("/")
         wikipedia_page_name = url_splits[-1]
+
         # Don't include wikipedia related pages, such as 'Wikipedia: Citation Needed'
         if "Wikipedia" in wikipedia_page_name:
             return
         try:
-            wikipedia_page_summary = wikipedia.summary(wikipedia_page_name)
+            wikipedia_page_summary = wikipedia.summary(wikipedia_page_name, auto_suggest=False)
         except Exception:
             return
         first_paragraph = wikipedia_page_summary.split("\n")[0]
