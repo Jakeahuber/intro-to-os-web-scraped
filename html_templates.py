@@ -39,7 +39,7 @@ class HtmlTemplate:
 
     def term_def_image_div(term, definition, image_link):
         return f"""
-        <div style="overflow:auto;">
+        <div style="overflow:auto; page-break-before: always;">
             <div style="padding: 20px;">
 
                 <div style="width: 50%;float: left;padding: 20px;">
@@ -49,7 +49,7 @@ class HtmlTemplate:
                 
                 <div style="width: 50%;float: left;padding: 20px;">
                     <div>
-                        <img src="{image_link}" alt="{definition}" style="width: 100%"/>
+                        <img src="{image_link}" alt="{definition}" style="width: 100%;"/>
                     </div>
                 </div>
             </div>

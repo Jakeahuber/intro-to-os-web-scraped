@@ -5,6 +5,7 @@ import wikipedia
 class CreateDocument:
     wikipedia_url = 'https://en.wikipedia.org/wiki/Operating_system'
     document_save_path = ""
+    character_limit = 1800 # the maximum length of a paragraph for a definition
 
     def __init__(self, document_save_path):
         self.document_save_path = document_save_path
@@ -28,7 +29,7 @@ class CreateDocument:
     # returns the html contents for the given url
     def __get_html_content(self, url):
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=10)
         except requests.exceptions.RequestException as e: 
             raise SystemExit(e)
 
@@ -53,13 +54,26 @@ class CreateDocument:
         url_splits = link.get('href').split("/")
         wikipedia_page_name = url_splits[-1]
         # Don't include wikipedia related pages, such as 'Wikipedia: Citation Needed'
-        if wikipedia_page_name.includes("Wikipedia"):
+        if "Wikipedia" in wikipedia_page_name:
             return
         try:
             wikipedia_page_summary = wikipedia.summary(wikipedia_page_name)
         except Exception:
             return
         first_paragraph = wikipedia_page_summary.split("\n")[0]
+        first_paragraph_with_char_limit = self.get_first_paragraph_with_char_limit(first_paragraph)
+
         document = open(document_name, 'a', encoding="utf-8")
-        document.write(f"{wikipedia_page_name} : {first_paragraph} \n\n")
+        document.write(f"{wikipedia_page_name} : {first_paragraph_with_char_limit} \n\n")
         document.close()
+
+    # shortens the paragraph if it exceeds the character limit
+    def get_first_paragraph_with_char_limit(self, paragraph):
+        if len(paragraph) <= self.character_limit:
+            return paragraph
+        
+        paragraph_with_limit = paragraph[:self.character_limit]
+
+        last_period = paragraph_with_limit.rfind('.')
+        print(paragraph_with_limit[: last_period + 1])
+        return paragraph_with_limit[: last_period + 1]

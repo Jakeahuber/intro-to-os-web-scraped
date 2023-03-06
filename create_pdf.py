@@ -1,9 +1,11 @@
 import os
 import pdfkit
 import requests
+import mimetypes
 from bing_image_urls import bing_image_urls
 from html_templates import HtmlTemplate
 from term_def_image import TermDefImage
+from PIL import Image
 
 class CreatePdf:
     html_save_path = "temp.html"
@@ -116,15 +118,37 @@ class CreatePdf:
     # Given a query, returns the first image Bing finds for the image.
     # Bing was chosen for this task because of its library's simplicity
     def __get_first_image_link(self, query):
-        urls = bing_image_urls(query, limit=10)
+        urls = bing_image_urls(query, limit=15)
         for url in urls:
             try:
-                response = requests.get(url)
-                response.status_code
-                if response.status_code in range(200, 300): # can access url, return it
+                response = requests.get(url, timeout=10)
+                if self.__is_valid_image(url, response):
                     return url
+                print(f"couldn't access {query} at: {url}")
             except:
+                print(f"cound find {query}")
                 pass
 
         # couldn't find an image. Display a default image (says 'not found').
         return "https://filestore.community.support.microsoft.com/api/images/ext?url=https%3A%2F%2Fanswerscdn.microsoft.com%2Fstatic%2Fimages%2Fimage-not-found.jpg"
+    
+    # verifies the url is an image, the url can be accessed, and the url's image has a reasonable aspect ratio
+    def __is_valid_image(self, url, response):
+        return self.__is_image(url) and response.status_code in range(200, 299) and self.__is_valid_aspect_ratio(response)
+
+    # verifies the url is an image
+    def __is_image(self, url):
+        mimetype, _ = mimetypes.guess_type(url)
+        return (mimetype and mimetype.startswith('image'))
+    
+    # verifies an image associated with a get request (response) has an aspect ratio less than 2
+    # (one side of the image isn't 2x or more larger than the other)
+    def __is_valid_aspect_ratio(self, response):
+        with open("temp_image.png", "wb") as f:
+            f.write(response.content)
+        img = Image.open("temp_image.png")
+        width, height = img.size
+        ratio = max(width, height) / min(width, height)
+        print(f"ratio: {ratio}")
+        # one side of the picture is 2x larger than the other. Looks bad, so isn't valid aspect ratio
+        return not ratio > 2
